@@ -2,7 +2,10 @@
   "name": "@react-chrome-extension-starter/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "nx serve --watch",
+    "build": "nx build"
+  },
   "private": true,
   "dependencies": {
     "react": "18.3.1",

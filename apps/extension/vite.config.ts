@@ -25,7 +25,7 @@ export default defineConfig({
   // },
 
   build: {
-    outDir: '../../dist/apps/extension',
+    outDir: '../../extension-build',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {
@@ -33,9 +33,11 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        popup: 'index.html',
-        background: 'src/background.ts',
-        content: 'src/content.ts',
+        popup: 'src/popup/index.html',
+        options: 'src/options/index.html',
+        'devtools-panel': 'src/devtools-panel/index.html',
+        background: 'src/scripts/background.ts',
+        content: 'src/scripts/content.ts',
       },
       output: {
         entryFileNames: '[name].js',
