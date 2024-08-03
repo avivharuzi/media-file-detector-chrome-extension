@@ -20,6 +20,8 @@ const findMediaFiles = (): MediaFile[] => {
   ).map((img) => ({
     type: 'image',
     src: img.src,
+    width: img.naturalWidth,
+    height: img.naturalHeight,
   }));
 
   const videos = [

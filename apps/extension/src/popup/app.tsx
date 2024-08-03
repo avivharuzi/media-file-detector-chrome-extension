@@ -8,6 +8,7 @@ import {
   Paper,
   Tab,
   Tabs,
+  Typography,
 } from '@mui/material';
 
 import { MediaFile } from '../shared/media-file';
@@ -90,12 +91,30 @@ export const App = () => {
                   <Grid2 xs={6} key={file.src}>
                     <Paper>
                       {file.type === 'image' ? (
-                        <img width={'100%'} src={file.src} alt={''} />
+                        <img
+                          title={file.src}
+                          width={'100%'}
+                          src={file.src}
+                          alt={''}
+                        />
                       ) : (
-                        <video width={'100%'} src={file.src} />
+                        <video title={file.src} width={'100%'} src={file.src} />
                       )}
 
-                      <Box display={'flex'} justifyContent={'center'} gap={4}>
+                      {file.width && file.height && (
+                        <Box display={'flex'} justifyContent={'center'} mt={2}>
+                          <Typography color={'grey.700'}>
+                            {file.width}x{file.height}
+                          </Typography>
+                        </Box>
+                      )}
+
+                      <Box
+                        display={'flex'}
+                        justifyContent={'center'}
+                        gap={4}
+                        mt={2}
+                      >
                         <Button
                           fullWidth
                           onClick={() => openInNewTab(file.src)}
