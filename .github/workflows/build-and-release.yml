@@ -33,14 +33,18 @@ jobs:
           mkdir -p dist
           zip -r dist/extension-build.zip extension-build
 
+      - name: Get current timestamp
+        id: get_timestamp
+        run: echo "timestamp=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: ${{ env.timestamp }}
+          release_name: Release ${{ env.timestamp }}
           draft: false
           prerelease: false
 
