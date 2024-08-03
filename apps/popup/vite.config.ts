@@ -31,5 +31,15 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    rollupOptions: {
+      input: {
+        popup: 'index.html',
+        background: 'src/background.ts',
+        content: 'src/content.ts',
+      },
+      output: {
+        entryFileNames: '[name].js',
+      },
+    },
   },
 });
