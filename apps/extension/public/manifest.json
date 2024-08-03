@@ -3,7 +3,7 @@
   "description": "Chrome Extension Starter",
   "version": "1.0.0",
   "manifest_version": 3,
-  "homepage_url": "https://github.com/avivharuzi/react-chrome-extension-starter",
+  "homepage_url": "https://github.com/avivharuzi/media-file-detector-chrome-extension",
   "background": {
     "service_worker": "background.js"
   },

@@ -1,6 +1,6 @@
 import { MediaFile } from '../shared/media-file';
 
-console.log('react-chrome-extension-starter - scripts-content');
+console.log('media-file-detector-chrome-extension - scripts-content');
 
 function uniqueByProperty<T, K extends keyof T>(array: T[], property: K): T[] {
   const seen = new Set<T[K]>();

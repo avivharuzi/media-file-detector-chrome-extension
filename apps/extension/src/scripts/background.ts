@@ -1,5 +1,5 @@
-console.log('react-chrome-extension-starter - scripts-background');
+console.log('media-file-detector-chrome-extension - scripts-background');
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('react-chrome-extension-starter installed');
+  console.log('media-file-detector-chrome-extension installed');
 });

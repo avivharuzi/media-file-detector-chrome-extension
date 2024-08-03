@@ -1,1 +1,1 @@
-# react-chrome-extension-starter
+# media-file-detector-chrome-extension
