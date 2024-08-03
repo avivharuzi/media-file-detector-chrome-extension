@@ -1,18 +1,23 @@
 import { MediaFile } from '../shared/media-file';
 
-console.log('media-file-detector-chrome-extension - scripts-content');
-
-function uniqueByProperty<T, K extends keyof T>(array: T[], property: K): T[] {
+const uniqueByProperty = <T, K extends keyof T>(
+  array: T[],
+  property: K
+): T[] => {
   const seen = new Set<T[K]>();
+
   return array.filter((item) => {
     const value = item[property];
+
     if (seen.has(value)) {
       return false;
     }
+
     seen.add(value);
+
     return true;
   });
-}
+};
 
 const findMediaFiles = (): MediaFile[] => {
   const images = Array.from(

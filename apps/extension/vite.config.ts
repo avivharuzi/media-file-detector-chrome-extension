@@ -34,8 +34,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: 'src/popup/index.html',
-        options: 'src/options/index.html',
-        'devtools-panel': 'src/devtools-panel/index.html',
         background: 'src/scripts/background.ts',
         content: 'src/scripts/content.ts',
       },
