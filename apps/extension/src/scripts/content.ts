@@ -67,7 +67,15 @@ const findMediaFiles = (): MediaFile[] => {
 
   const mediaFilesFromUrls = [...hrefUrls, ...srcUrls]
     .map((url) => {
+      if (!url) {
+        return null;
+      }
+
       const fileName = getFileNameFromUrl(url);
+
+      if (!fileName) {
+        return null;
+      }
 
       const extension = fileName.split('.').pop()?.toLowerCase();
 
