@@ -1,0 +1,21 @@
+{
+  "window.zoomLevel": 1,
+  "terminal.integrated.fontFamily": "FiraCode Nerd Font",
+  "terminal.integrated.fontSize": 14,
+  "editor.fontFamily": "FiraCode Nerd Font",
+  "editor.fontSize": 18,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.fixAll": "explicit"
+  },
+  "eslint.format.enable": true,
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "js/ts.preferences.importModuleSpecifier": "project-relative",
+  "tailwindCSS.classFunctions": ["tw", "clsx", "cn", "cva", "tw\\.[a-z-]+"]
+}

@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "anthropic.claude-code",
+    "dbaeumer.vscode-eslint",
+    "k--kato.intellij-idea-keybindings",
+    "firsttris.vscode-jest-runner",
+    "pkief.material-icon-theme",
+    "nrwl.angular-console",
+    "zhuangtongfa.material-theme",
+    "esbenp.prettier-vscode",
+    "humao.rest-client",
+    "bradlc.vscode-tailwindcss"
+  ]
+}
