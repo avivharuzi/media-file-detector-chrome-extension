@@ -8,17 +8,21 @@ import {
   CssBaseline,
   FormControlLabel,
   FormGroup,
+  IconButton,
   Paper,
   Stack,
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import { MediaFile } from '../shared/media-file';
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { downloadFilesAsZip } from '../shared/download-files-as-zip';
+import { DEFAULT_SETTINGS, loadSettings } from '../shared/settings';
 
 enum TabValue {
   Images = 'images',
@@ -28,8 +32,19 @@ enum TabValue {
 export const App = () => {
   const [tabValue, setTabValue] = useState(TabValue.Images);
   const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
-  const [minWidthAndHeight, setMinWidthAndHeight] = useState<number>(512);
-  const [requireResolution, setRequireResolution] = useState<boolean>(false);
+  const [minWidthAndHeight, setMinWidthAndHeight] = useState<number>(
+    DEFAULT_SETTINGS.minWidthAndHeight
+  );
+  const [requireResolution, setRequireResolution] = useState<boolean>(
+    DEFAULT_SETTINGS.requireResolution
+  );
+  const [useTitleNaming, setUseTitleNaming] = useState<boolean>(
+    DEFAULT_SETTINGS.useTitleNaming
+  );
+  const [zipInFolder, setZipInFolder] = useState<boolean>(
+    DEFAULT_SETTINGS.zipInFolder
+  );
+  const [title, setTitle] = useState<string>('');
   const [selectedMediaFiles, setSelectedMediaFiles] = useState<string[]>([]);
 
   const isMediaFileValid = (mediaFile: MediaFile) => {
@@ -67,10 +82,25 @@ export const App = () => {
   useEffect(() => {
     (async () => {
       try {
+        const settings = await loadSettings();
+
+        setMinWidthAndHeight(settings.minWidthAndHeight);
+        setRequireResolution(settings.requireResolution);
+        setUseTitleNaming(settings.useTitleNaming);
+        setZipInFolder(settings.zipInFolder);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+
+    (async () => {
+      try {
         const [tab] = await chrome.tabs.query({
           active: true,
           lastFocusedWindow: true,
         });
+
+        setTitle(tab?.title ?? '');
 
         if (tab?.id) {
           const response = await chrome.tabs.sendMessage(tab.id, {
@@ -98,11 +128,16 @@ export const App = () => {
         return;
       }
 
-      await downloadFilesAsZip(urls);
+      await downloadFilesAsZip(urls, downloadOptions());
     } catch (error) {
       console.error(error);
     }
   };
+
+  const downloadOptions = () => ({
+    title: useTitleNaming ? title : undefined,
+    inFolder: zipInFolder,
+  });
 
   const handleDownloadSelected = async () => {
     try {
@@ -115,13 +150,13 @@ export const App = () => {
         return;
       }
 
-      await downloadFilesAsZip(urls);
+      await downloadFilesAsZip(urls, downloadOptions());
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDownload = (url: string) => {
+  const handleDownload =(url: string) => {
     const a = document.createElement('a');
     a.href = url;
     a.download = '';
@@ -158,15 +193,71 @@ export const App = () => {
             width: '100%',
           }}
         >
-          <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
+          <Box
+            sx={{
+              width: '100%',
+              bgcolor: 'background.paper',
+              position: 'relative',
+            }}
+          >
             <Tabs value={tabValue} onChange={handleTabChange} centered>
               <Tab label={'Images'} value={TabValue.Images} />
               <Tab label={'Videos'} value={TabValue.Videos} />
             </Tabs>
+            <Tooltip title={'Settings'}>
+              <IconButton
+                aria-label={'Settings'}
+                onClick={() => chrome.runtime.openOptionsPage()}
+                sx={{ position: 'absolute', right: 0, top: 4 }}
+              >
+                <SettingsIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
 
+          {mediaFiles.length > 0 && (
+            <Box
+              display={'flex'}
+              alignItems={'center'}
+              gap={2}
+              marginTop={3}
+            >
+              <TextField
+                variant={'filled'}
+                size={'small'}
+                label={'File name (title)'}
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                disabled={!useTitleNaming}
+                sx={{ flex: 1 }}
+              />
+              <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={useTitleNaming}
+                      onChange={(event) =>
+                        setUseTitleNaming(event.target.checked)
+                      }
+                    />
+                  }
+                  label={'Name by title'}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={zipInFolder}
+                      onChange={(event) => setZipInFolder(event.target.checked)}
+                    />
+                  }
+                  label={'Folder in zip'}
+                />
+              </FormGroup>
+            </Box>
+          )}
+
           <Box marginTop={4}>
-            {filteredMediaFiles.length > 0 && (
+            {mediaFiles.length > 0 && (
               <Box
                 display={'flex'}
                 alignItems={'center'}
@@ -179,6 +270,7 @@ export const App = () => {
                     variant={'contained'}
                     onClick={() => handleDownloadAll()}
                     size={'large'}
+                    disabled={filteredMediaFiles.length === 0}
                   >
                     Download All
                   </Button>
@@ -220,6 +312,11 @@ export const App = () => {
                   />
                 </Box>
               </Box>
+            )}
+            {mediaFiles.length > 0 && filteredMediaFiles.length === 0 && (
+              <Typography color={'grey.700'} align={'center'}>
+                No files match the current filters.
+              </Typography>
             )}
             <Grid2 spacing={4} container>
               {filteredMediaFiles.map((file) => {
